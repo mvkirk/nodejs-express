@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { User } from './../models/user';
 import { UsersRepository } from '../repository/users.repository';
 import * as argon2 from 'argon2';
@@ -10,6 +11,8 @@ import * as jwt from 'jsonwebtoken';
  */
 export class AuthService {
     private static instance: AuthService;
+    public connectedUser: User | undefined;
+    private secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : '';
 
     private repository: UsersRepository;
     private constructor() {
@@ -43,15 +46,38 @@ export class AuthService {
           id: user.id
         };
 
-        const secret = process.env.JWT_SECRET;
-        if (!secret) {
+        if (!this.secret) {
             throw new Error('Pas de secret setup');
         }
 
-        const token2 = jwt.sign(userToken,  secret);
-        console.log(token2);
+        const token = jwt.sign(userToken, this.secret);
 
-        return token2;
+        return token;
     }
+
+    async isAdmin(req: Request, res: Response, next: Function) {
+        if (this.connectedUser?.role === 'admin') {
+            next();
+        }
+        res.sendStatus(401);
+    }
+
+    async verifyToken(req: Request, res: Response, next: Function) {
+        const authorization = req.headers.authorization;
+        const bearerToken = authorization?.split(' ')[1];
+        if (!bearerToken) {
+            res.sendStatus(401);
+        }
+        else {
+            try {
+                const results: any = await jwt.verify(bearerToken, this.secret);
+                this.connectedUser = await this.repository.findByEmail(results.email);
+                next();
+            } catch(e) {
+                res.sendStatus(401);
+            }
+        }
+    }
+     
 
 }

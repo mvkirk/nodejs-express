@@ -1,6 +1,7 @@
 import { Post } from './../models/post';
 import { PostsService } from './../services/posts.service';
 import express, { Router, Request, Response, Application } from 'express';
+import { AuthService } from './../services/auth.service';
 
 /**
  * Ce controller vous servira de modèle pour construire vos différent controller
@@ -13,23 +14,20 @@ export const PostsController = (app: Application) => {
 
     const router: Router = express.Router();
     const postsService = PostsService.getInstance();
+    const authService = AuthService.getInstance();
 
     /**
      * Return all posts in JSON
      */
-    router.get('/', (req: Request, res: Response) => {
-      postsService.getAll().then(results => {
-            res.send(results);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+    router.get('/', authService.verifyToken, authService.isAdmin, (req: Request, res: Response) => {
+      //authService.connectedUser;
+      res.send([3, 4, 5]);
     });
 
     /**
      * Return only one post in JSON relative to its id
      */
-    router.get('/:id', (req: Request, res: Response) => {
+    router.get('/:id', authService.verifyToken, (req: Request, res: Response) => {
       const id = parseInt(req.params.id);
       postsService.getById(id).then(result => {
             res.send(result);

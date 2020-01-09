@@ -27,7 +27,7 @@ export const AuthController = (app: Application) => {
           });
         })
         .catch(err => {
-          console.log(err);
+          res.sendStatus(401);
         })
     });
 
