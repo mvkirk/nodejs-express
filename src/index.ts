@@ -1,3 +1,4 @@
+import { UsersController } from './controller/users.controller';
 import { AuthController } from './controller/auth.controller';
 import { PostsController } from './controller/posts.controller';
 import express from 'express';
@@ -14,6 +15,7 @@ async function startServer() {
   // Ajout des différentes route de votre application
   AuthController(app);
   PostsController(app);
+  UsersController(app);
   
     // Démarrage du serveur une fois que tout est correctement init
     app.listen(3000, () => console.log('Express server  is running'));

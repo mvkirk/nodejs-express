@@ -19,7 +19,7 @@ export const PostsController = (app: Application) => {
     /**
      * Return all posts in JSON
      */
-    router.get('/', authService.verifyToken, authService.isAdmin, (req: Request, res: Response) => {
+    router.get('/', (req: Request, res: Response) => {
       //authService.connectedUser;
       res.send([3, 4, 5]);
     });
@@ -40,7 +40,7 @@ export const PostsController = (app: Application) => {
     /**
      * Create a new post from a JSON body and return the created post in JSON.
      */
-    router.post('/', (req: Request, res: Response) => {
+    router.post('/', authService.verifyToken, (req: Request, res: Response) => {
       const post: Post = req.body; // Automatically transform in a Post object
 
       postsService.create(post).then(result => {
@@ -54,7 +54,7 @@ export const PostsController = (app: Application) => {
     /**
      * Update a post relative to its id and return the updated post in JSON.
      */
-    router.put('/:id', (req: Request, res: Response) => {
+    router.put('/:id', authService.verifyToken, (req: Request, res: Response) => {
       const post: Post = req.body; // req.params.id is automatically set into the body
 
       postsService.update(post).then(result => {

@@ -21,9 +21,11 @@ export const AuthController = (app: Application) => {
     router.post('/login', (req: Request, res: Response) => {
       const user: User = req.body;
 
-      authService.signin(user.email, user.password).then((token: string) => {
+      authService.signin(user.email, user.password).then((results: any) => {
           res.send({
-            token
+            token: results.token,
+            id: results.id,
+            email: results.email
           });
         })
         .catch(err => {
