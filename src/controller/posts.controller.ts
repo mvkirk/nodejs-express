@@ -27,7 +27,7 @@ export const PostsController = (app: Application) => {
     /**
      * Return only one post in JSON relative to its id
      */
-    router.get('/:id', authService.verifyToken, (req: Request, res: Response) => {
+    router.get('/:id', (req: Request, res: Response) => {
       const id = parseInt(req.params.id);
       postsService.getById(id).then(result => {
             res.send(result);
