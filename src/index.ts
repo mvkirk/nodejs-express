@@ -1,3 +1,5 @@
+import { TracksController } from './controller/tracks.controller';
+import { PlaylistsController } from './controller/playlists.controller';
 import { UsersController } from './controller/users.controller';
 import { AuthController } from './controller/auth.controller';
 import { PostsController } from './controller/posts.controller';
@@ -16,7 +18,9 @@ async function startServer() {
   AuthController(app);
   PostsController(app);
   UsersController(app);
-  
+  PlaylistsController(app);
+  TracksController(app);
+
     // Démarrage du serveur une fois que tout est correctement init
     app.listen(3000, () => console.log('Express server  is running'));
   }

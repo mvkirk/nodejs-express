@@ -11,7 +11,7 @@ export class MysqlConnection {
       host: 'localhost', // address of the server
       user: 'root', // username
       password: 'rootroot',
-      database: 'blog',
+      database: 'music',
     });
   }
 
